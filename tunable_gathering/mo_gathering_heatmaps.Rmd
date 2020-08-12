@@ -1,0 +1,60 @@
+---
+title: "mo_gathering_heatmaps"
+author: "David O'Callaghan"
+date: "7/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r message=FALSE, warning=FALSE}
+data <- read_csv('./results/tuning_performance_scalarisation1.csv')
+
+ggplot(data) + 
+  geom_tile(aes(x=`Red Pref`, y=`A2R Pref`, fill=`Red`)) +
+  scale_x_continuous(breaks=seq(-20,20,5), name="Preference: Tunable Agent Red", expand = c(0,0)) +
+  scale_y_continuous(breaks=seq(-20,20,5), name="Preference: Other Agent Red ", expand = c(0,0)) +
+  
+  scale_fill_distiller(type='seq', palette=14, direction = 1, name="Red Items Collected",
+                       limits=c(0,1.3)) +
+
+  coord_fixed() +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.key.size = unit(10, "mm"),
+    legend.position = "right",
+    
+    axis.title = element_text(size=12),
+  )
+#ggsave('gathering_heatmap_scalarisation1.png')
+```
+
+```{r message=FALSE, warning=FALSE}
+data <- read_csv('./results/tuning_performance_scalarisation2.csv')
+
+ggplot(data) + 
+  geom_tile(aes(x=`Red Pref`, y=`A2R Pref`, fill=`Red`)) +
+  scale_x_continuous(breaks=seq(-20,20,5), name="Preference: Tunable Agent Red", expand = c(0,0)) +
+  scale_y_continuous(breaks=seq(-20,20,5), name="Preference: Other Agent Red ", expand = c(0,0)) +
+  
+  scale_fill_distiller(type='seq', palette=14, direction = 1, name="Red Items Collected",
+                       limits=c(0,1.3)) +
+
+  coord_fixed() +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.key.size = unit(10, "mm"),
+    legend.position = "right",
+    
+    axis.title = element_text(size=12),
+  )
+#ggsave('gathering_heatmap_scalarisation2.png')
+```
+
