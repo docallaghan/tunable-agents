@@ -16,7 +16,7 @@ from collections import deque
 
     
 SEED = 21
-EPISODES = 250
+EPISODES = 5
 FRAME_STACK_SIZE = 3
 
 
@@ -109,4 +109,4 @@ results_df = pd.DataFrame(np.array(results),
                                      "A2R", 
                                      "Reward"])
 
-results_df.to_csv('tuning_performance_scalarisation1.csv')
+results_df.to_csv('results/tuning_performance_scalarisation1_test.csv')
