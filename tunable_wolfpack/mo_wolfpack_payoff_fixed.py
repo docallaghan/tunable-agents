@@ -51,8 +51,8 @@ def play_game(ag1, ag2):
         _, pred1_rewards, pred2_rewards = reward_vectors
         
         # Linear scalarisation
-        pred1_reward = np.dot(pred1_rewards, ag1.pref)
-        pred2_reward = np.dot(pred2_rewards, ag2.pref)
+        pred1_reward = np.dot(pred1_rewards[2:], ag1.pref[2:]) / 0.97
+        pred2_reward = np.dot(pred2_rewards[2:], ag2.pref[2:]) / 0.97
         rewards = [pred1_reward, pred2_reward]
         
         # Store in replay buffers
