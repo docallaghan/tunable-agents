@@ -7,7 +7,6 @@ from gym import Env, spaces
 from gym.utils import seeding
 #from gym.envs.classic_control import rendering
 import matplotlib.pyplot as plt
-from IPython.display import display, clear_output
 
 class GridObject():
     """Object that can be placed in a GridWorld.
