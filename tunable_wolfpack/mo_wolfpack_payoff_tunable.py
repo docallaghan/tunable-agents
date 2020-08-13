@@ -54,8 +54,9 @@ def play_game(s1, s2):
         next_prey_state, next_pred1_state, next_pred2_state = next_observations
         _, pred1_rewards, pred2_rewards = reward_vectors
         
-        pred1_reward = np.sum(pred1_rewards[2:])
-        pred2_reward = np.sum(pred2_rewards[2:])
+        # Linear scalarisation
+        pred1_reward = np.dot(pred1_rewards[2:], s1[2:]) / 0.97
+        pred2_reward = np.dot(pred2_rewards[2:], s2[2:]) / 0.97
         rewards = [pred1_reward, pred2_reward]
         
         # Store in replay buffers
