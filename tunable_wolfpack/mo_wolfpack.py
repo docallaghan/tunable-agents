@@ -78,38 +78,15 @@ class RewardTracker:
 
 class PreferenceSpace:
     
-    # distribution = [
-    #     [0.005, 0.025, 0.485, 0.485], # Even
-    #     [0.005, 0.025, 0.150, 0.820], # Cooperative
-    #     [0.005, 0.025, 0.820, 0.150], # Competitive
-    #     ]
-    # def sample(self):
-    #     return np.array(random.choice(self.distribution), dtype=np.float32)
-    
-    # def sample(self):
-    #     return np.array([0.005, 0.025, 2, 2], dtype=np.float32)
     def __init__(self):
         w0 = 0.005 # Time penalty
         w1 = 5 * w0 # Wall penalty : 5x time penalty
         w2_range = np.linspace(0,0.97,5)
-        
         self.distribution = [np.array([w0, w1, w2, 0.97 - w2], dtype=np.float32) for w2 in w2_range]
-        # self.prob_weighting = [0.6/4, 0.6/4, 0.6/4, 0.6/4, 0.4]
         
     def sample(self):
-        # return np.random.choice(self.distribution, p=self.prob_weighting)
         return random.choice(self.distribution)
-        
-    
-    # def sample(self):
-    #     w0 = 0.005 # Time penalty
-    #     w1 = 5 * w0 # Wall penalty : 5x time penalty
-    #     max_reward = 1 - (w0 + w1)
-    #     w2 = np.random.rand() * max_reward # Lone reward
-    #     w3 = 1 - (w0 + w1 + w2) # Team reward
-    #     return np.array([w0, w1, w2, w3], dtype=np.float32) 
-    
-    
+   
 class MovingAverage(deque):
     def mean(self):
         return sum(self) / len(self)
@@ -125,7 +102,7 @@ REPLAY_MEMORY_SIZE = 6000
 GAMMA = 0.99
 ALPHA = 1e-4
 
-TRAINING_EPISODES = 55_000
+TRAINING_EPISODES = 80_000
 
 EPSILON_START = 1.0
 EPSILON_END = 0.01
@@ -348,8 +325,9 @@ if __name__ == '__main__':
     pred1 = DQNAgent(1)
     pred2 = DQNAgent(2)    
     
-    # pred1.load_model(f'{PATH_DIR}/wolfpack_model_pred1_110720_colab1.h5')
-    # pred2.load_model(f'{PATH_DIR}/wolfpack_model_pred1_110720_colab1.h5')
+    # Uncomment to load pre-trained models
+    # pred1.load_model(f'{PATH_DIR}/models/wolfpack_model_tunable_pred1_seed1.h5')
+    # pred2.load_model(f'{PATH_DIR}/models/wolfpack_model_tunable_pred2_seed1.h5')
     
     if not IMAGE:
         x, y = env.base_gridmap_array.shape[0] - 1, env.base_gridmap_array.shape[1] - 1
