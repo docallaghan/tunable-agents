@@ -10,7 +10,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.cm import get_cmap
 import random
-import sys
 
 import tensorflow as tf
 from tensorflow import keras
@@ -78,21 +77,21 @@ class RewardTracker:
 
 
 class PreferenceSpace:
-    # def sample(self):
-    #     p0 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Green
-    #     p1 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Red
-    #     p2 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Yellow
-    #     p3 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Other Agent Red
-    #     pref = np.array([p0, p1, p2, p3], dtype=np.float32)
-    #     w01 = np.array([-1, -5], dtype=np.float32)
-    #     return np.concatenate((w01, pref))
-
-    # Uncomment below as necessary for training fixed agents
     def sample(self):
-        return np.array([-1, -5, +10, +20, +10, -20], dtype=np.float32) # Competitive
-        # return np.array([-1, -5, +10, +20, +10, +20], dtype=np.float32) # Cooperative
-        # return np.array([-1, -5, +20, +15, +20, +20], dtype=np.float32) # Fair
-        # return np.array([-1, -5, +20,   0, +20, +20], dtype=np.float32) # Generous
+        p0 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Green
+        p1 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Red
+        p2 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Yellow
+        p3 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Other Agent Red
+        pref = np.array([p0, p1, p2, p3], dtype=np.float32)
+        w01 = np.array([-1, -5], dtype=np.float32)
+        return np.concatenate((w01, pref))
+
+    # # Uncomment below as necessary for training fixed agents
+    # def sample(self):
+    #     return np.array([-1, -5, +10, +20, +10, -20], dtype=np.float32) # Competitive
+    #     # return np.array([-1, -5, +10, +20, +10, +20], dtype=np.float32) # Cooperative
+    #     # return np.array([-1, -5, +20, +15, +20, +20], dtype=np.float32) # Fair
+    #     # return np.array([-1, -5, +20,   0, +20, +20], dtype=np.float32) # Generous
 
 
 class MovingAverage(deque):
@@ -122,7 +121,8 @@ MEAN_REWARD_EVERY = 100 # Episodes
 
 FRAME_STACK_SIZE = 3
 
-PATH_ID = '290720_docallag_fixed1'
+PATH_ID = 'tunable_DDMMYY'
+PATH_DIR = './'
 
 KALLSTROM_SETUP = False # Change to False for unit vector scalarisation
 
@@ -338,64 +338,6 @@ class DQNAgent:
         # self.model.set_weights(best_weights)
         self.model.save(MODEL_PATH)
         
-    # def train_model_fixed(self, episodes, reward_tracker, preference):
-    #     """
-    #     Train the network over a range of episodes.
-    #     """
-    #     best_reward = -np.inf
-    #     steps = 0
-        
-    #     for episode in range(episodes):
-    #         # Decay epsilon
-    #         eps = max(self.eps0 - episode * EPSILON_DECAY, EPSILON_END)
-            
-    #         # Reset env
-    #         state = self.env.reset(preference=preference)
-    #         state = np.float32(state) / 255 # Convert to float32 for tf
-            
-    #         # Create deque for storing stack of N frames
-    #         initial_stack = [state for _ in range(FRAME_STACK_SIZE)]
-    #         self.frame_stack = deque(initial_stack, maxlen=FRAME_STACK_SIZE)
-    #         state = np.concatenate(self.frame_stack, axis=2) # State is now a stack of frames
-            
-    #         episode_reward = 0
-    #         while True:
-                
-    #             #eps = self.eps0
-    #             state, reward, done = self.play_one_step(state, eps, preference)
-    #             steps += 1
-    #             episode_reward += reward
-    #             if done:
-    #                 break
-                
-    #             # Copy weights from main model to target model
-    #             if steps % COPY_TO_TARGET_EVERY == 0:
-    #                 if DEBUG:
-    #                     print(f'\n\n{steps}: Copying to target\n\n')
-    #                 self.target_model.set_weights(self.model.get_weights())
-                        
-    #         reward_tracker.append(episode_reward)
-    #         avg_reward = reward_tracker.mean()
-    #         if avg_reward > best_reward:
-    #             #best_weights = self.model.get_weights()
-    #             best_reward = avg_reward
-            
-    #         print("\rEpisode: {}, Reward: {}, Avg Reward {}, eps: {:.3f}".format(
-    #             episode, episode_reward, avg_reward, eps), end="")
-            
-    #         if episode > START_TRAINING_AFTER: # Wait for buffer to fill up a bit
-    #             self.training_step()
-            
-    #         if episode % 100 == 0:
-    #             self.model.save(MODEL_PATH)
-    #             self.reward_data = reward_tracker.get_reward_data()
-    #             self.plot_learning_curve(image_path=IMAGE_PATH, 
-    #                                      csv_path=CSV_PATH)
-                
-    #     # self.model.set_weights(best_weights)
-    #     self.reward_data = reward_tracker.get_reward_data()
-    #     self.model.save(MODEL_PATH)
-    
     def load_model(self, path):
         self.model = keras.models.load_model(path)
         self.target_model = keras.models.clone_model(self.model)
@@ -499,9 +441,9 @@ if __name__ == '__main__':
     except:
         print(tf.config.list_physical_devices())
         
-    IMAGE_PATH = f'plots/reward_plot_{PATH_ID}.png'
-    CSV_PATH = f'plots/reward_data_{PATH_ID}.csv'
-    MODEL_PATH = f'models/dqn_model_{PATH_ID}.h5'
+    IMAGE_PATH = f'{PATH_DIR}/plots/reward_plot_{PATH_ID}.png'
+    CSV_PATH = f'{PATH_DIR}/plots/reward_data_{PATH_ID}.csv'
+    MODEL_PATH = f'{PATH_DIR}/models/dqn_model_{PATH_ID}.h5'
     
     # For timing the script
     start_time = datetime.now()
@@ -518,7 +460,7 @@ if __name__ == '__main__':
     # Instantiate agent (pass in environment)
     dqn_ag = DQNAgent(item_env)
     # Uncomment as necessary to load a pre-trained model
-    #dqn_ag.load_model('models/dqn_model_tunable_150k.h5')
+    #dqn_ag.load_model('models/dqn_model_tunable_DDMMYY.h5')
 
     dqn_ag.train_model(TRAINING_EPISODES, pref_space)
     # To re-initialise exploration (not actually used)
