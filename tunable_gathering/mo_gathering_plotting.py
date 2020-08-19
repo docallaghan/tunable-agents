@@ -27,7 +27,7 @@ class MovingAverage(deque):
         return sum(self) / len(self)
     
     
-def plot_reward_data(csv_path, plot_id, colour_id, legend_label):
+def plot_reward_data(csv_path, colour_id, legend_label):
     reward_data = np.loadtxt(csv_path, delimiter=',')
     mean_rewards = np.zeros(len(reward_data))
     tracker = MovingAverage(maxlen=MEAN_EVERY)
@@ -43,22 +43,21 @@ def plot_reward_data(csv_path, plot_id, colour_id, legend_label):
 
 if __name__ == '__main__':
     # Scalarisation Method 1
-    plot_reward_data(f'{data_dir}/reward_data_tunable_scalarisation1.csv', 0, 0, 'Tunable Agent')
-    plot_reward_data(f'{data_dir}/reward_data_fixed1_scalarisation1.csv', 0, 3, 'Fixed Agent 1')
-    plot_reward_data(f'{data_dir}/reward_data_fixed2_scalarisation1.csv', 0, 2, 'Fixed Agent 2')
-    plot_reward_data(f'{data_dir}/reward_data_fixed3_scalarisation1.csv', 0, 4, 'Fixed Agent 3')
-    plot_reward_data(f'{data_dir}/reward_data_fixed4_scalarisation1.csv', 0, 1, 'Fixed Agent 4')
+    plot_reward_data(f'{data_dir}/reward_data_tunable_scalarisation1.csv', 0, 'Tunable Agent')
+    plot_reward_data(f'{data_dir}/reward_data_fixed1_scalarisation1.csv', 3, 'Fixed Agent 1')
+    plot_reward_data(f'{data_dir}/reward_data_fixed2_scalarisation1.csv', 2, 'Fixed Agent 2')
+    plot_reward_data(f'{data_dir}/reward_data_fixed3_scalarisation1.csv', 4, 'Fixed Agent 3')
+    plot_reward_data(f'{data_dir}/reward_data_fixed4_scalarisation1.csv', 1, 'Fixed Agent 4')
     
     # Scalarisation Method 2
-    # plot_reward_data(f'{data_dir}/reward_data_tunable_scalarisation2.csv', 0, 0, 'Tunable Agent')
-    # plot_reward_data(f'{data_dir}/reward_data_fixed1_scalarisation2.csv', 0, 3, 'Fixed Agent 1')
-    # plot_reward_data(f'{data_dir}/reward_data_fixed2_scalarisation2.csv', 0, 2, 'Fixed Agent 2')
-    # plot_reward_data(f'{data_dir}/reward_data_fixed3_scalarisation2.csv', 0, 4, 'Fixed Agent 3')
-    # plot_reward_data(f'{data_dir}/reward_data_fixed4_scalarisation2.csv', 0, 1, 'Fixed Agent 4')
+    # plot_reward_data(f'{data_dir}/reward_data_tunable_scalarisation2.csv', 0, 'Tunable Agent')
+    # plot_reward_data(f'{data_dir}/reward_data_fixed1_scalarisation2.csv', 3, 'Fixed Agent 1')
+    # plot_reward_data(f'{data_dir}/reward_data_fixed2_scalarisation2.csv', 2, 'Fixed Agent 2')
+    # plot_reward_data(f'{data_dir}/reward_data_fixed3_scalarisation2.csv', 4, 'Fixed Agent 3')
+    # plot_reward_data(f'{data_dir}/reward_data_fixed4_scalarisation2.csv', 1, 'Fixed Agent 4')
 
     ax.set_xlabel('Episode')
     ax.set_ylabel(f'Mean {MEAN_EVERY} Episode Reward')
-    #ax.set_title('Training Progress for Item Gathering Environment')
     ax.grid(True, ls=':', c='dimgrey')
     ax.set_facecolor('white')
     ax.legend(facecolor='white')
