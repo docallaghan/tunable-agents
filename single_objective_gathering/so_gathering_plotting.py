@@ -27,7 +27,7 @@ class MovingAverage(deque):
         return sum(self) / len(self)
     
     
-def plot_reward_data(csv_path, plot_id, colour_id, legend_label):
+def plot_reward_data(csv_path, colour_id, legend_label):
     reward_data = np.loadtxt(csv_path, delimiter=',')
     mean_rewards = np.zeros(len(reward_data))
     tracker = MovingAverage(maxlen=MEAN_EVERY)
@@ -44,7 +44,7 @@ def plot_reward_data(csv_path, plot_id, colour_id, legend_label):
     
 
 if __name__ == '__main__':
-    plot_reward_data(f'{data_dir}/reward_data_single_objective_gathering.csv', 0, 0, 'DQN Agent')
+    plot_reward_data(f'{data_dir}/reward_data_single_objective_gathering.csv', 0, 'DQN Agent')
 
     ax.set_xlabel('Episode')
     ax.set_ylabel(f'Mean {MEAN_EVERY} Episode Reward')
