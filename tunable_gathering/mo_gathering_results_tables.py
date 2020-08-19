@@ -63,8 +63,6 @@ def play_episode(agent, preference, results_dict):
     state = agent.env.reset(preference=preference)
     state = np.float32(state) / 255 # Convert to float32 for tf
     weights = agent.normalise(preference[2:])
-    # weights = agent.normalise(preference[[3,5]])
-    #print(preference, weights)
     
     # Create stack
     initial_stack = [state for _ in range(FRAME_STACK_SIZE)]
@@ -114,7 +112,7 @@ if __name__ == '__main__':
     # For timing the script
     start_time = datetime.now()
     
-    # Instantiate environment
+    # Instantiate environments (one for fixed and one for tunable)
     item_env1 = MOGatheringEnv(from_pixels=True, penalty_sign=PENALTY_SIGN)
     item_env2 = MOGatheringEnv(from_pixels=True, penalty_sign=PENALTY_SIGN)
     

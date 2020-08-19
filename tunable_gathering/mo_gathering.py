@@ -78,6 +78,7 @@ class RewardTracker:
 
 class PreferenceSpace:
     def sample(self):
+        # Each preference weight is randomly sampled between -20 and 20 in steps of 5
         p0 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Green
         p1 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Red
         p2 = random.choice([x for x in range(-20, 21) if x % 5 == 0]) # Yellow
@@ -186,7 +187,6 @@ class DQNAgent:
         # Define optimizer and loss function
         self.optimizer = keras.optimizers.Adam(lr=ALPHA)
         self.loss_fn = keras.losses.mean_squared_error
-        #self.loss_fn = keras.losses.Huber()
         
         return model
     
@@ -321,7 +321,6 @@ class DQNAgent:
             self.reward_tracker.append(episode_reward)
             avg_reward = self.reward_tracker.mean()
             if avg_reward > best_reward:
-                #best_weights = self.model.get_weights()
                 best_reward = avg_reward
             
             print("\rTime: {}, Episode: {}, Reward: {}, Avg Reward {}, eps: {:.3f}".format(
@@ -335,7 +334,6 @@ class DQNAgent:
                 self.plot_learning_curve(image_path=IMAGE_PATH, 
                                          csv_path=CSV_PATH)
                 
-        # self.model.set_weights(best_weights)
         self.model.save(MODEL_PATH)
         
     def load_model(self, path):
@@ -400,9 +398,7 @@ class DQNAgent:
         episode_reward = 0
         while True:
             i += 1
-            #qval = self.model.predict(state.reshape(1,self.input_size))
             action = self.epsilon_greedy_policy(state, 0.05, weights)
-            #action = (np.argmax(qval)) #take action with highest Q-value
             print('Move #: %s; Taking action: %s' % (i, action))
             state, rewards, done, _ = self.env.step(action)
             state = np.float32(state) / 255 # convert to float32 for tf

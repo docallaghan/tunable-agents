@@ -22,7 +22,6 @@ def play_game(ag1, ag2):
     eps = 0.01
     # Reset env
     observations = env.reset()
-    #env.render()
     prey_state, pred1_state, pred2_state = observations
        
     # Create deque for storing stack of N frames
@@ -72,7 +71,6 @@ def play_game(ag1, ag2):
         episode_reward += np.array(rewards)
         
         if done:
-            #print(s1, s2, episode_reward)
             break
                 
     return episode_reward

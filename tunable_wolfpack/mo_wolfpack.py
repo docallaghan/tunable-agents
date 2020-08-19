@@ -39,7 +39,7 @@ class ReplayMemory(deque):
                                     size=batch_size)
         # Filter the batch from the deque
         batch = [self[index] for index in indices]
-        # Unpach and create numpy arrays for each element type in the batch
+        # Unpack and create numpy arrays for each element type in the batch
         states, actions, rewards, next_states, dones, weightss = [
                 np.array([experience[field_index] for experience in batch])
                 for field_index in range(6)]
@@ -93,7 +93,6 @@ class MovingAverage(deque):
 
 
 SEED = 42
-DEBUG = False
 IMAGE = True
 
 BATCH_SIZE = 64
@@ -160,10 +159,8 @@ class DQNAgent:
             # Define Layers
             x = image_input
             x = Conv2D(256, (3, 3), activation='relu')(x)
-            # x = MaxPooling2D((2, 2))(x)
             x = Dropout(0.2)(x)
             x = Conv2D(256, (3, 3), activation='relu')(x)
-            # x = MaxPooling2D((2, 2))(x)
             x = Dropout(0.2)(x)
             x = Flatten()(x)
             x = Concatenate()([x, weights_input])
@@ -175,11 +172,9 @@ class DQNAgent:
             
             # Build full model
             model = keras.Model(inputs=[image_input, weights_input], outputs=outputs)
-            # model = keras.Model(inputs=image_input, outputs=outputs)
             
             # Define optimizer and loss function
             self.optimizer = keras.optimizers.Adam(lr=ALPHA)
-            #self.loss_fn = keras.losses.mean_squared_error
             self.loss_fn = keras.losses.Huber()
         else:
             # agent locations and distances between them
@@ -199,13 +194,11 @@ class DQNAgent:
             
             # Define optimizer and loss function
             self.optimizer = keras.optimizers.Adam(lr=ALPHA)
-            #self.loss_fn = keras.losses.mean_squared_error
             self.loss_fn = keras.losses.Huber()
         
         return model    
     
     def epsilon_greedy_policy(self, state, epsilon, weights):
-    # def epsilon_greedy_policy(self, state, epsilon):
         """
         Select greedy action from model output based on current state with 
         probability epsilon. With probability 1 - epsilon select random action.
@@ -214,7 +207,6 @@ class DQNAgent:
             return random.choice(self.actions)
         else:
             Q_values = self.model.predict([state[np.newaxis], weights[np.newaxis]])
-            # Q_values = self.model.predict(state[np.newaxis])
             return np.argmax(Q_values)
     
     def training_step(self):
@@ -227,11 +219,9 @@ class DQNAgent:
         # Sample a batch of S A R S' from replay memory
         experiences = self.replay_memory.sample(self.batch_size)
         states, actions, rewards, next_states, dones, weightss = experiences
-        # states, actions, rewards, next_states, dones = experiences
         
         # Compute target Q values from 'next_states'
         next_Q_values = self.target_model.predict([next_states, weightss])
-        # next_Q_values = self.target_model.predict(next_states)
         
         max_next_Q_values = np.max(next_Q_values, axis=1)
         target_Q_values = (rewards +
@@ -243,7 +233,6 @@ class DQNAgent:
         # Compute loss and gradient for predictions on 'states'
         with tf.GradientTape() as tape:
             all_Q_values = self.model([states, weightss])
-            # all_Q_values = self.model(states)
             Q_values = tf.reduce_sum(all_Q_values * mask, axis=1, 
                                      keepdims=True)
             loss = tf.reduce_mean(self.loss_fn(target_Q_values, Q_values))
@@ -417,8 +406,6 @@ if __name__ == '__main__':
             
             # Copy weights from main model to target model
             if steps % COPY_TO_TARGET_EVERY == 0:
-                # if DEBUG:
-                #     print(f'\n\n{steps}: Copying to target\n\n')
                 pred1.update_target_model()
                 pred2.update_target_model()
                     

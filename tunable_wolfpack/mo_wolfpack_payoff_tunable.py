@@ -71,7 +71,7 @@ def play_game(s1, s2):
         # Assign next state to current state !!
         pred1_state = next_pred1_state
         pred2_state = next_pred2_state
-        # env.render()
+        
         steps += 1
         episode_reward += np.array(rewards)
         
